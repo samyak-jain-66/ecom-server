@@ -9,6 +9,7 @@ const CategorySchema = mongoose.Schema(
       },
     ],
     productsId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }], // ref to Product Model
+    secondaryTag: [{ type: String }],
   },
   { timestamps: true }
 );
