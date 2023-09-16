@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ProductSchema = mongoose.Schema(
   {
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Category',
+      ref: "Category",
     },
     name: { type: String, required: true, trim: true },
     brand: { type: String, trim: true },
@@ -31,13 +31,12 @@ const ProductSchema = mongoose.Schema(
     discount_price: { type: Number, default: 0 },
     discount_percentage: { type: Number },
     commentsId: { type: mongoose.Schema.Types.ObjectId },
-    relatedItems: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    relatedItems: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     description: { type: String, required: true },
     rating: { type: Number, default: 3 },
     primaryTag: { type: String },
-    secondaryTag: [{ type: String }],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Product', ProductSchema);
+module.exports = mongoose.model("Product", ProductSchema);

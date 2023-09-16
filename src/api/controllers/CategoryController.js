@@ -1,5 +1,5 @@
-const Category = require('../models/Category');
-const { UploadImage } = require('../../utils/cloudinary');
+const Category = require("../models/Category");
+const { UploadImage } = require("../../utils/cloudinary");
 
 const GetCategories = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ const GetCategory = async (req, res) => {
   try {
     const category = await Category.findById(categoryId);
     if (!category) {
-      res.status(401).json('No Category Found');
+      res.status(401).json("No Category Found");
       return;
     }
     res.status(200).json(category);
@@ -26,16 +26,17 @@ const GetCategory = async (req, res) => {
 
 const CreateCategory = async (req, res) => {
   try {
-    const imageUrl = await UploadImage([], req.body.image, 'e-comm', 'single');
+    const imageUrl = await UploadImage([], req.body.image, "e-comm", "single");
     if (imageUrl) {
       const newCategory = new Category({
         name: req.body.name,
+        secondaryTag: [req.body.secondaryTag],
         image: [imageUrl],
       });
       const savedCategory = await newCategory.save();
       return res.status(201).json(savedCategory);
     }
-    return res.status(500).json('Error while uploading image!');
+    return res.status(500).json("Error while uploading image!");
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -47,10 +48,10 @@ const DeleteCategory = async (req, res) => {
   try {
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
     if (!deletedCategory) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
 
-    res.status(200).json({ message: 'Category deleted successfully' });
+    res.status(200).json({ message: "Category deleted successfully" });
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -71,15 +72,15 @@ const UpdateCategory = async (req, res) => {
     );
 
     if (!updatedCategoryResult) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
 
     res.status(200).json({
-      message: 'Category updated successfully',
+      message: "Category updated successfully",
       category: updatedCategoryResult,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

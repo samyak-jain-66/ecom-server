@@ -1,5 +1,5 @@
-const Product = require('../models/Product');
-const { UploadImage } = require('../../utils/cloudinary');
+const Product = require("../models/Product");
+const { UploadImage } = require("../../utils/cloudinary");
 
 // @route("{{URL}}/product/get?categoryId=63ff24af586ff01dd43c9b36&tag=bestseller")
 const GetProducts = async (req, res) => {
@@ -14,24 +14,24 @@ const GetProducts = async (req, res) => {
   }
 
   if (brand) {
-    searchQuery.brand = { $in: brand.split(',') };
+    searchQuery.brand = { $in: brand.split(",") };
   }
 
   if (type) {
-    searchQuery.primaryTag = { $in: type.split(',') };
+    searchQuery.primaryTag = { $in: type.split(",") };
   }
 
   if (productPrice) {
-    let lowerBound = productPrice.split('_')[0].split(',')[0];
-    let upperBound = productPrice.split('_')[1].split(',').slice(-1)[0];
+    let lowerBound = productPrice.split("_")[0].split(",")[0];
+    let upperBound = productPrice.split("_")[1].split(",").slice(-1)[0];
 
     searchQuery.price = { $gte: lowerBound, $lte: upperBound };
   }
 
   try {
     const products = await Product.find(searchQuery).populate(
-      'categoryId',
-      'name'
+      "categoryId",
+      "name"
     );
     return res.status(200).json(products);
   } catch (error) {
@@ -44,8 +44,8 @@ const GetProduct = async (req, res) => {
   const productId = req.params.id;
   try {
     const product = await Product.findById(productId).populate(
-      'categoryId',
-      'name'
+      "categoryId",
+      "name"
     );
     if (product) {
       return res.status(201).json(product);
@@ -59,9 +59,9 @@ const CreateProduct = async (req, res) => {
   try {
     const imagesUrl = await UploadImage(
       req.body.image,
-      '',
-      'e-comm',
-      'multiple'
+      "",
+      "e-comm",
+      "multiple"
     );
     if (imagesUrl) {
       const newProduct = new Product({
@@ -79,12 +79,11 @@ const CreateProduct = async (req, res) => {
         description: req.body.description,
         rating: req.body.rating,
         primaryTag: req.body.primaryTag,
-        secondaryTag: req.body.secondaryTag,
       });
       const savedProduct = await newProduct.save();
       return res.status(201).json(savedProduct);
     }
-    return res.status(500).json('Error while creating product!');
+    return res.status(500).json("Error while creating product!");
   } catch (error) {
     res.status(500).json(error);
   }
@@ -98,13 +97,13 @@ const UpdateProductStock = async (req, res) => {
     const product = await Product.findById(productId);
 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: "Product not found" });
     }
 
     const currentQuantity = product.quantity;
 
     if (requestedQuantity > currentQuantity) {
-      return res.status(400).json({ message: 'Insufficient product quantity' });
+      return res.status(400).json({ message: "Insufficient product quantity" });
     }
 
     // Calculate the new quantity after decreasing
@@ -118,11 +117,11 @@ const UpdateProductStock = async (req, res) => {
     );
 
     res.status(200).json({
-      message: 'Product quantity updated successfully',
+      message: "Product quantity updated successfully",
       product: updatedProduct,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -132,10 +131,10 @@ const DeleteProduct = async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(productId);
     if (!deletedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    res.status(200).json({ message: 'Product deleted successfully' });
+    res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -153,15 +152,15 @@ const UpdateProductDetails = async (req, res) => {
     );
 
     if (!updatedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: "Product not found" });
     }
 
     res.status(200).json({
-      message: 'Product details updated successfully',
+      message: "Product details updated successfully",
       product: updatedProduct,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
